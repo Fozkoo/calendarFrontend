@@ -74,3 +74,13 @@ header h1{
     border-radius: 5px;
     font-size: 16px;
 }
+
+.hoy{
+    background-color: #ffd700;
+    font-weight: bold;
+}
+
+.dia-especial{
+    background-color: #ff6347;
+    color: white;
+}

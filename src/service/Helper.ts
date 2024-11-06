@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "https://poo2024.unsada.edu.ar/cuentas/login?Content-Type=application/json";
+const URL = "https://poo2024.unsada.edu.ar/cuentas/login";
 
 
 const login = async (username: string, password: string) => {

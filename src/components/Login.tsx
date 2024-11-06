@@ -71,7 +71,9 @@ function Login() {
             <BiHide onClick={togglePasswordVisibility} className="h-6 w-6 cursor-pointer" />
           )}
         </div>
+
         <p className="text-red-500 font-medium">Incorrect username or password, try again</p>
+
         <input
           type="submit"
           value="LOGIN"

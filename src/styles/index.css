@@ -14,7 +14,7 @@ body {
     height: 100vh;
     background-color: white;
     overflow: hidden;
-    z-index: 1; /* Asegura que el contenido esté por encima del fondo */
+    z-index: 1; 
 }
 
 .container-login-page::before {
@@ -26,5 +26,5 @@ body {
     height: 100%;
     background: linear-gradient(-135deg, #7ab8ff, #b58ded);
     clip-path: polygon(0 100%, 100% 0, 100% 100%);
-    z-index: -1; /* Coloca el pseudo-elemento por debajo del contenido */
+    z-index: -1; /
 }

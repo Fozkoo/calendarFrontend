@@ -1,0 +1,30 @@
+@import '@fontsource-variable/onest';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Onest Variable', sans-serif;
+}
+
+.container-login-page {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+    overflow: hidden;
+    z-index: 1; /* Asegura que el contenido esté por encima del fondo */
+}
+
+.container-login-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(-135deg, #7ab8ff, #b58ded);
+    clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    z-index: -1; /* Coloca el pseudo-elemento por debajo del contenido */
+}

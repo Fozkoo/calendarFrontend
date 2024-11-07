@@ -1,6 +1,4 @@
-// AuthContext.tsx
-import localforage from 'localforage';
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
   userId: string | null;

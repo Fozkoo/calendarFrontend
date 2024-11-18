@@ -12,6 +12,9 @@
   "dependencies": {
     "@fontsource-variable/onest": "^5.1.0",
     "@fontsource/onest": "^5.1.0",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "axios": "^1.7.7",
     "calendarfrontend": "file:",
     "localforage": "^1.10.0",

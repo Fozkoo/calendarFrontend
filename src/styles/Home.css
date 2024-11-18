@@ -1,0 +1,10 @@
+
+.fc-day:hover {
+    background-color: #FFD700; 
+    cursor: pointer;
+}
+
+
+.fc-day.fc-event:hover {
+    background-color: #FF4500; 
+}

@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage.tsx';
 import './styles/index.css';
 import PrivateRoute from './components/PrivateRoute.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
+import { MainMenuView } from './pages/MainMenuView.tsx';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="*" element={<Home />} />
+            <Route path="/MainMenuView" element={<MainMenuView />} />
           </Route>
         </Routes>
       </Router>

@@ -1,13 +1,11 @@
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import servicesAPI from '../service/Helper';
 import { Header } from '../components/Header';
 import '../styles/Home.css';
 
 function Home() {
   const [data, setData] = useState([]);
+  const [menuVisible, setMenuVisible] = useState(true); 
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -27,22 +25,24 @@ function Home() {
     fetchEvents();
   }, []);
 
+  
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
 
   return (
     <>
-      <Header />
+      <Header name="Tiziano" toggleMenu={toggleMenu} /> 
 
-      <div className="container-page px-8  py-8 flex justify-between items-center  w-full h-[100vh]">
-
-        <div className="container-main-menu flex justify-center bg-slate-400 w-[23%] h-[100%]">
+      <div className={`container-page px-8 py-8 flex ${menuVisible ? 'justify-between' : 'justify-center'} items-center w-full h-[100vh]`}>
+        <div className={`container-main-menu ${menuVisible ? 'flex' : 'hidden'} justify-center bg-slate-400 w-[23%] h-[100%] transition-all duration-300 ease-in-out`}>
           asdasd
         </div>
 
-        <div className="container-calendar flex bg-red-700 justify-center items-center  w-[75%] h-[100%]">
+        <div className={`container-calendar flex bg-red-700 justify-center items-center ${menuVisible ? 'w-[75%]' : 'w-[90%]'} h-[100%] transition-all duration-300 ease-in-out`}>
           asd
         </div>
       </div>
-
     </>
   );
 }

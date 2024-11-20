@@ -22,11 +22,11 @@ export const Header = ({ name, toggleMenu }: HeaderProps) => {
             className="cursor-pointer text-5xl bi bi-list"
             onClick={toggleMenu}
           ></button>
-          <h1 className="text-3xl font-medium">Klendar</h1>
+          <h1 className="text-3xl font-normal">Klendar</h1>
         </nav>
 
         <aside className="user-info flex h-full gap-5 items-center">
-          <h2 className="text-3xl font-medium">Hello {name ? name : "User"}</h2>
+          <h2 className="text-3xl font-normal">¡Welcome back {name ? name : "User"}!</h2>
           <img
             src={imgLogo}
             alt="Profile Picture"

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import servicesAPI from '../service/Helper';
 import { Header } from '../components/Header';
 import '../styles/Home.css';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 
 function Home() {
@@ -45,8 +47,12 @@ function Home() {
           asdasd
         </div>
 
-        <div className={`container-calendar flex bg-red-700 justify-center items-center ${menuVisible ? 'w-[75%]' : 'w-[90%]'} h-[100%] transition-all duration-300 ease-in-out`}>
-          asd
+        <div className={`container-calendar bg-red-600 flex  justify-center items-center ${menuVisible ? 'w-[75%]' : 'w-[90%]'} h-[100%] transition-all duration-300 ease-in-out`}>
+          <FullCalendar
+            plugins={[dayGridPlugin]}
+            initialView="dayGridMonth"
+            height={700}
+            events={data}/>
         </div>
       </div>
     </>

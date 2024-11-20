@@ -9,6 +9,7 @@ body{
 .menu-container{
     background-color: white;
     border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 350px;
     padding: 40px;
     text-align: center;
@@ -21,17 +22,17 @@ body{
     margin: 30px 0;
     border: none;
     border-radius: 8px;
-    background-color: blueviolet;
+    background: linear-gradient(135deg, #3aa0ff, #8459ff);
     color: white;
     font-size: 25px;
     cursor: pointer;
 }
 
 .menu-button:hover{
-    background-color: blueviolet;
+    background: linear-gradient(135deg, #3388dd, #704bcc);
 }
 
 .menu-button:active{
-    background-color: blueviolet;
+    background: linear-gradient(135deg, #2566a3, #59389a);
 }
 

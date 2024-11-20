@@ -8,15 +8,15 @@ import MainMenu from '../components/MainMenu';
 import Footer from '../components/Footer';
 import AddEventComponent from '../components/AddEventComponent';
 
+
 function Home() {
   const [data, setData] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(true);
-  const [newEventVisible, setNewEventVisible] = useState(false);  
+  const [menuVisible, setMenuVisible] = useState(true); 
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const userId = "aaaaaa44444";
+        const userId = "tiziano10";
         const events = await servicesAPI.getAllEventsByIdUser(userId);
         const formattedEvents = events.map((event: { eventTitle: any; eventDay: any; }) => ({
           title: event.eventTitle,
@@ -35,27 +35,18 @@ function Home() {
     setMenuVisible(!menuVisible);
   };
 
-  const showNewEvent = () => {
-    setNewEventVisible(true);
-  };
 
-  const hideNewEvent = () => {
-    setNewEventVisible(false);
-  };
 
   return (
     <>
       <Header name="Tiziano" toggleMenu={toggleMenu} />
 
-
-      <div className={`view-new-event bg-white absolute justify-center items-center w-full h-[100vh] ${newEventVisible ? 'flex' : 'hidden'} z-50`}>
-        <AddEventComponent />
-      </div>
+      <AddEventComponent/>
 
 
-      <div className={`container-page px-8 flex ${menuVisible ? 'justify-between' : 'justify-center'} items-start w-full h-[100vh]`}>
+      <div className={`container-page hidden px-8 flex ${menuVisible ? 'justify-between' : 'justify-center'} items-start w-full h-[100vh]`}>
         <div className={`container-main-menu ${menuVisible ? 'flex' : 'hidden'} items-start justify-center pt-20 w-[23%] transition-all duration-300 ease-in-out`}>
-          <MainMenu showNewEvent={showNewEvent} />
+          <MainMenu />
         </div>
 
         <div className={`container-calendar p-10 flex justify-center ${menuVisible ? 'w-[75%]' : 'w-[90%]'} transition-all duration-300 ease-in-out`}>

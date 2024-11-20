@@ -33,3 +33,7 @@ body {
 body {
     background-color: #EDEDED;
 }
+
+.input {
+    background: linear-gradient(-135deg, #7ab8ff, #b58ded);
+}

@@ -1,64 +1,56 @@
-
+import "..//styles/index.css";
 
 function AddEventComponent() {
-
-
-
   return (
-      <div className="absolute  bg-white w-full h-f max-w-sm bg-red rounded-3xl shadow-xl p-8">
-        <form  className="space-y-6">
-        <div className="relative">
-            <input
-              type="date"
-              className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-blue-400/10 to-purple-400/10 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
-              required
-            />
-            <label className="absolute left-4 -top-2.5 bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text text-sm font-medium px-1">
-              Date
-            </label>
-          </div>
-
-          <div className="relative">
-            <input
-              type="time"
-              className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-blue-400/10 to-purple-400/10 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
-              required
-            />
-            <label className="absolute left-4 -top-2.5 bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text text-sm font-medium px-1">
-              Hora
-            </label>
-          </div>
-          <div className="relative">
-            <input
-              type="text"
-              className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-blue-400/10 to-purple-400/10 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
-              required
-            />
-            <label className="absolute left-4 -top-2.5 bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text text-sm font-medium px-1">
-              Nombre
-            </label>
-          </div>
-
-          <div className="relative">
-            <label 
-              className="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-gradient-to-r from-blue-400 to-purple-400 text-white cursor-pointer hover:opacity-90 transition-opacity"
-            >
-            
-              <span>Adjunto</span>
+    <>
+      <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
+        <div className="container-form flex justify-center items-center bg-white rounded-xl w-[600px] h-[500px] shadow-lg">
+          <form className="bg-[#EDEDED] flex gap-5 h-[350px] w-[90%] flex-col justify-center items-center rounded-xl p-5">
+            <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
+              <p className="text-white text-2xl">Hora</p>
               <input
-                type="file"
-                className="hidden"
+                type="time"
+                placeholder="Name event"
+                className="w-50 h-10 border-none rounded-md px-2"
               />
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-blue-400 to-purple-400 text-white font-medium hover:opacity-90 transition-opacity"
-          >
-            Save
-          </button>
-        </form>
+            </div>
+            <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
+              <p className="text-white text-2xl">Date</p>
+              <input
+                type="date"
+                placeholder="Name event"
+                className="w-50 h-10 border-none rounded-md px-2"
+              />
+            </div>
+            <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
+              <p className="text-white text-2xl">Name event</p>
+              <input
+                type="text"
+                placeholder="Name event"
+                className="w-40 h-10 border-none rounded-md px-2"
+              />
+            </div>
+            <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
+              <p className="text-white text-2xl">Attachment</p>
+              <div className="relative w-40">
+                <input
+                  type="file"
+                  id="fileInput"
+                  className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <button
+                  type="button"
+                  className="w-full h-10 bg-blue-500 text-white rounded-md px-4 flex items-center justify-center hover:bg-blue-600"
+                  onClick={() => document.getElementById("fileInput")?.click()}
+                >
+                  Subir Archivo
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
+    </>
   );
 }
 

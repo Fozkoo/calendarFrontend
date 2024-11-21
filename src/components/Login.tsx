@@ -18,12 +18,13 @@ function Login() {
 
   const sendForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     try {
       const response = await servicesAPI.login(formData.username, formData.password);
       
       if (response.userId) {          
         login(response.userId);       
-        navigate('/home');         
+        navigate('/home');       
       } else {
         alert('Credenciales incorrectas, intenta nuevamente.');
         navigate('/login');

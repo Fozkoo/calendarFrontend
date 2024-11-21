@@ -6,30 +6,33 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import MainMenu from '../components/MainMenu';
 import Footer from '../components/Footer';
-import AddEventComponent from '../components/AddEventComponent';
+import { useAuth } from '../context/AuthContext';
 
 
 function Home() {
   const [data, setData] = useState([]);
   const [menuVisible, setMenuVisible] = useState(true); 
+  const { userId } = useAuth();
 
   useEffect(() => {
+    if (!userId) return; 
+  
     const fetchEvents = async () => {
       try {
-        const userId = "tiziano10";
         const events = await servicesAPI.getAllEventsByIdUser(userId);
         const formattedEvents = events.map((event: { eventTitle: any; eventDay: any; }) => ({
           title: event.eventTitle,
-          date: event.eventDay,  
+          date: event.eventDay,
         }));
         setData(formattedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
     };
-
+  
     fetchEvents();
-  }, []);
+  }, [userId]); 
+  
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -39,12 +42,9 @@ function Home() {
 
   return (
     <>
-      <Header name="Tiziano" toggleMenu={toggleMenu} />
+      <Header name={userId} toggleMenu={toggleMenu} />
 
-      <AddEventComponent/>
-
-
-      <div className={`container-page hidden px-8 flex ${menuVisible ? 'justify-between' : 'justify-center'} items-start w-full h-[100vh]`}>
+      <div className={`container-page  px-8 flex ${menuVisible ? 'justify-between' : 'justify-center'} items-start w-full h-[100vh]`}>
         <div className={`container-main-menu ${menuVisible ? 'flex' : 'hidden'} items-start justify-center pt-20 w-[23%] transition-all duration-300 ease-in-out`}>
           <MainMenu />
         </div>

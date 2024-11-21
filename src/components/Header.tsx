@@ -3,7 +3,7 @@ import imgLogo from "..//assets/Images/mujer.png";
 import LogoutComponent from "./LogoutComponent";
 
 interface HeaderProps {
-  name: string;
+  name: string | null;
   toggleMenu: () => void;
 }
 

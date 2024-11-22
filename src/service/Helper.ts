@@ -4,11 +4,18 @@ const URL = "https://poo2024.unsada.edu.ar/cuentas/login";
 
 const urlAPI = "http://localhost:8080/api/events"
 
+const urlNotificationsAPI = "http://localhost:8080/notifications/"
+
 const createApi = axios.create({
   baseURL: urlAPI,
 })
 
+const createNotificationsApi = axios.create({
+  baseURL: urlNotificationsAPI,
+})
 
+
+// methods for login
 
 const login = async (username: string, password: string) => {
     try {
@@ -20,13 +27,15 @@ const login = async (username: string, password: string) => {
 }
 
 
-const getBlocks = async () => {
-    try {
-        const response = await createApi.get("/getAllBlocksByMonthId/2");
-        return response.data;
-    } catch (error) {
-        return error;
-    }
+// methods for events
+
+const createNewEvent = async (event: any) => {
+  try {
+    const response = await createApi.post("/createEvent", event);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 }
 
 const getAllEvents = async () => {
@@ -50,16 +59,33 @@ const getAllEventsByIdUser = async (userId: any) => {
 
 
 
+// methods to notifications
+
+const getAllNotifications = async () => {
+  try {
+    const response = await createNotificationsApi.get("/getAllNotifications");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 
 
 
 const servicesAPI = {
     login,
-    getBlocks,
     getAllEvents,
-    getAllEventsByIdUser
+    getAllEventsByIdUser,
+    getAllNotifications,
+    createNewEvent
 };
 
 
-export default servicesAPI;
+const methodsNotifications = {
+  getAllNotifications
+}
+
+
+export default servicesAPI ; methodsNotifications;
 

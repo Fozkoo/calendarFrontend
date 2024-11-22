@@ -54,7 +54,7 @@ function AddEventComponent() {
     try {
       const response = await methodsNotifications.createNewEvent(newEvent); 
       console.log("Event created successfully:", response);
-      alert("¡Evento creado con éxito!");
+      alert("¡Event created successfully!");
       window.location.reload();
       setEventTitle("");
       setEventTime("");
@@ -62,8 +62,8 @@ function AddEventComponent() {
       setUrlAttachment("");
       setNotificationId(null);
     } catch (error) {
-      console.error("Error creando el evento:", error);
-      alert("Error creando el evento.");
+      console.error("Error created event.", error);
+      alert("Error created event.");
     }
   };
 

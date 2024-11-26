@@ -40,7 +40,7 @@ function Login() {
   };
 
   return (
-    <div className="login bg-white w-[434px] h-[700px] mt-10 mx-auto rounded-2xl shadow-xl flex flex-col items-center p-8">
+    <div className="login bg-white w-[434px] h-[700px] mt-10 mx-auto rounded-2xl shadow-xl flex flex-col items-center p-8 max-2xl:w-[390px] max-2xl:shadow-2xl">
       <h2 className="font-bold text-4xl mt-10 mb-6">Login</h2>
       <form className="w-full flex flex-col items-center space-y-4 gap-9 mt-[10%]" onSubmit={sendForm}>
         <div className="text_area w-full h-16 rounded-lg shadow-md flex items-center">

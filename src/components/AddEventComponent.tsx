@@ -71,65 +71,68 @@ function AddEventComponent() {
   
   return (
     <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
-      <div className="container-form flex justify-center items-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg">
+      <div className="container-form flex justify-center items-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg ">
         <form
           onSubmit={handleSubmit}
-          className="bg-[#EDEDED] flex gap-5 h-[550px] w-[85%] flex-col justify-center items-center rounded-xl p-3"
+          className="bg-[#EDEDED] flex gap-5 h-[550px] w-[85%] flex-col justify-center items-center rounded-xl p-3 max-2xl:p-0 max-2xl:w-[95%]"
         >
-          <div className="input text-white w-[80%] h-14 flex items-center justify-center rounded-lg px-7">
+          <div className="input text-white w-[80%] h-14 flex items-center justify-center rounded-lg px-7 max-2xl:w-[75%]">
             <p className="text-white text-2xl">New Event</p>
           </div>
           {errorMessage && (
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
-            <p className="text-white text-2xl">Hora</p>
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
+            <p className="text-white text-2xl max-2xl:text-xl">Hora</p>
             <input
               type="time"
               value={eventTime}
               onChange={(e) => setEventTime(e.target.value)}
-              className="w-40 h-10 border-none rounded-md px-2"
+              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
               required
             />
           </div>
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
-            <p className="text-white text-2xl">Date</p>
+
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
+            <p className="text-white text-2xl max-2xl:text-xl">Date</p>
             <input
               type="date"
               value={eventDate}
               onChange={(e) => setEventDate(e.target.value)}
-              className="w-40 h-10 border-none rounded-md px-2"
+              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
               required
             />
           </div>
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
-            <p className="text-white text-2xl">Name event</p>
+
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
+            <p className="text-white text-2xl max-2xl:hidden">Name event</p>
+            <p className="text-white text-xl">Name</p>
             <input
               type="text"
               placeholder="Name event"
               value={eventTitle}
               onChange={(e) => setEventTitle(e.target.value)}
-              className="w-40 h-10 border-none rounded-md px-2"
+              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
               required
             />
           </div>
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
-            <p className="text-white text-2xl">Attachment</p>
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%]  max-2xl:px-4">
+            <p className="text-white text-2xl max-2xl:text-base">Desciption</p>
             <input
               type="text"
               placeholder="Attachment"
               value={urlAttachment}
               onChange={(e) => setUrlAttachment(e.target.value)}
-              className="w-40 h-10 border-none rounded-md px-2"
+              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
               required
             />
           </div>
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
-            <p className="text-white text-2xl">Notification</p>
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
+            <p className="text-white text-2xl max-2xl:text-xl">Notification</p>
             <select
               value={notificationId || ""}
               onChange={(e) => setNotificationId(Number(e.target.value))}
-              className="w-40 h-10 border-none rounded-md px-2"
+              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
               required
             >
               <option value="" disabled>
@@ -144,7 +147,7 @@ function AddEventComponent() {
           </div>
           <button
             type="submit"
-            className="input text-2xl w-[80%] h-10 text-white rounded-2xl"
+            className="input text-2xl w-[80%] h-10 text-white rounded-2xl max-2xl:w-[75%]"
           >
             Save
           </button>

@@ -43,18 +43,19 @@ const DeleteEventMenu = () => {
 
   return (
     <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
-      <div className="container-form flex items-center justify-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg">
-        <div className="container-content flex bg-[#EDEDED] w-full rounded-2xl m-10 p-10 flex-col justify-center items-center gap-10">
-          <div className="input w-[80%] h-14 flex items-center justify-center rounded-lg px-7">
+      <div className="container-form flex items-center justify-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg max-2xl:h-[500px] max-2xl:w-[90%]">
+
+        <div className="container-content flex bg-[#EDEDED] w-full rounded-2xl m-10 p-10 flex-col justify-center items-center gap-10 max-2xl:m-3 ">
+          <div className="input w-[80%] h-14 flex items-center justify-center rounded-lg px-7 max-2xl:px-4 max-2xl:w-[100%]">
             <p className="text-white text-2xl">Delete Event</p>
           </div>
 
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800">
-            <p className="text-white text-xl">Select event</p>
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:px-4 max-2xl:w-[100%]">
+            <p className="text-white text-xl max-2xl:text-sm">Select event</p>
             <select
               name="events"
               id="events"
-              className="w-40 h-10 border-none rounded-md px-2"
+              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
               onChange={(e) => setSelectedEventId(Number(e.target.value))}
             >
               <option value="">Select an event</option>

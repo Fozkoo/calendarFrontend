@@ -16,13 +16,12 @@ import "../styles/MainMenu.css";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 
-
 function Home() {
   const [data, setData] = useState([]);
   const [menuVisible, setMenuVisible] = useState(true);
   const [addEventVisible, setAddEventVisible] = useState(false);
   const [deleteEventVisible, setDeleteEventVisible] = useState(false);
-  const [modifyEventVisible, setModifyEventVisible] = useState(false); 
+  const [modifyEventVisible, setModifyEventVisible] = useState(false);
   const { userId } = useAuth();
 
   useEffect(() => {
@@ -72,11 +71,14 @@ function Home() {
     setModifyEventVisible(false);
   };
 
+  // Oculta el menú si algún modal está visible
+  const isAnyModalVisible = addEventVisible || deleteEventVisible || modifyEventVisible;
+
   return (
     <>
-     
+      {/* Add Event Modal */}
       <div
-        className={`container-addEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] absolute z-10 ${
+        className={`container-addEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] fixed z-30 ${
           addEventVisible ? "flex" : "hidden"
         }`}
       >
@@ -87,9 +89,9 @@ function Home() {
         <AddEventComponent />
       </div>
 
-      
+      {/* Delete Event Modal */}
       <div
-        className={`container-deleteEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] absolute z-10 ${
+        className={`container-deleteEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] fixed z-30 ${
           deleteEventVisible ? "flex" : "hidden"
         }`}
       >
@@ -100,9 +102,9 @@ function Home() {
         <DeleteEventMenu />
       </div>
 
-     
+      {/* Modify Event Modal */}
       <div
-        className={`container-modifyEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] absolute z-10 ${
+        className={`container-modifyEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] fixed z-30 ${
           modifyEventVisible ? "flex" : "hidden"
         }`}
       >
@@ -117,16 +119,16 @@ function Home() {
 
       <div
         className={`container-page px-8 flex max-2xl:px-3 ${
-          menuVisible ? "justify-between" : "justify-center"
+          isAnyModalVisible ? "justify-center" : menuVisible ? "justify-between" : "justify-center"
         } items-start w-full h-[100vh] max-2xl:justify-center`}
       >
-        
+   
         <div
+
           className={`container-main-menu ${
-            menuVisible ? "flex" : "hidden"
-          } items-start justify-center pt-20 w-[23%] transition-all duration-300 ease-in-out  max-2xl:absolute max-2xl:w-[100%] max-2xl:bg-[#E0E0E0] max-2xl:h-[100vh] max-2xl:z-20`}
+            isAnyModalVisible || !menuVisible ? "hidden" : "flex"
+          } items-start justify-center pt-20 w-[23%] transition-all duration-300 ease-in-out max-2xl:absolute max-2xl:w-[100%] max-2xl:bg-[#E0E0E0] max-2xl:h-[100vh] max-2xl:z-20`}
         >
-          
           <div className="menu-container max-2xl:flex max-2xl:flex-col">
             <button className="menu-button" onClick={handleNewEvent}>
               New Event
@@ -140,13 +142,12 @@ function Home() {
           </div>
         </div>
 
-        
         <div
-          className={`container-calendar p-10 flex justify-center  max-2xl:p-0 max-2xl:w-[100%] ${
-            menuVisible ? "w-[75%]" : "w-[90%]"
+          className={`container-calendar p-10 flex justify-center max-2xl:p-0 max-2xl:w-[100%] ${
+            menuVisible && !isAnyModalVisible ? "w-[75%]" : "w-[90%]"
           } transition-all duration-300 ease-in-out`}
         >
-          <div className="container-calendar pt-10 flex justify-center rounded-xl ">
+          <div className="container-calendar pt-10 flex justify-center rounded-xl">
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"

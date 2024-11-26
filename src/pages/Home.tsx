@@ -71,12 +71,12 @@ function Home() {
     setModifyEventVisible(false);
   };
 
-  // Oculta el menú si algún modal está visible
+
   const isAnyModalVisible = addEventVisible || deleteEventVisible || modifyEventVisible;
 
   return (
     <>
-      {/* Add Event Modal */}
+    
       <div
         className={`container-addEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] fixed z-30 ${
           addEventVisible ? "flex" : "hidden"
@@ -89,7 +89,7 @@ function Home() {
         <AddEventComponent />
       </div>
 
-      {/* Delete Event Modal */}
+ 
       <div
         className={`container-deleteEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] fixed z-30 ${
           deleteEventVisible ? "flex" : "hidden"
@@ -102,7 +102,7 @@ function Home() {
         <DeleteEventMenu />
       </div>
 
-      {/* Modify Event Modal */}
+    
       <div
         className={`container-modifyEvent flex flex-col justify-center items-center bg-[#EDEDED] w-full h-[100vh] fixed z-30 ${
           modifyEventVisible ? "flex" : "hidden"
@@ -120,7 +120,7 @@ function Home() {
       <div
         className={`container-page px-8 flex max-2xl:px-3 ${
           isAnyModalVisible ? "justify-center" : menuVisible ? "justify-between" : "justify-center"
-        } items-start w-full h-[100vh] max-2xl:justify-center`}
+        } items-start w-full h-[100vh] max-2xl:justify-center max-2xl:h-[80vh]`}
       >
    
         <div

@@ -1,7 +1,6 @@
 import "../styles/MainMenu.css"
 
 
-
 const MainMenu = () => {  
   return (
     <>

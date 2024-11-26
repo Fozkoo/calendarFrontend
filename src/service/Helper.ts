@@ -4,7 +4,7 @@ const URL = "https://poo2024.unsada.edu.ar/cuentas/login";
 
 const urlAPI = "http://localhost:8080/api/events"
 
-const urlNotificationsAPI = "http://localhost:8080/notifications/"
+const urlNotificationsAPI = "http://localhost:8080/api/notifications/"
 
 const createApi = axios.create({
   baseURL: urlAPI,
@@ -58,6 +58,31 @@ const getAllEventsByIdUser = async (userId: any) => {
 };
 
 
+const deleteEvents = async (eventId: any) => {
+  try {
+    const response = await createApi.delete(`/deleteEventById/${eventId}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+const modifyEvent = async (eventId: string, formData: any) => {
+  try {
+      const response = await createApi.put(`/modifyEventById/${eventId}`, formData);
+      return response.data;
+  } catch (error) {
+      console.error("Network Error", error);
+      throw error;
+  }
+};
+
+
+
+
+
+
 
 // methods to notifications
 
@@ -73,12 +98,16 @@ const getAllNotifications = async () => {
 
 
 
+
+
 const servicesAPI = {
     login,
     getAllEvents,
     getAllEventsByIdUser,
     getAllNotifications,
-    createNewEvent
+    createNewEvent,
+    deleteEvents,
+    modifyEvent
 };
 
 

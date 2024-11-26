@@ -67,6 +67,8 @@ function AddEventComponent() {
     }
   };
 
+
+  
   return (
     <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
       <div className="container-form flex justify-center items-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg">

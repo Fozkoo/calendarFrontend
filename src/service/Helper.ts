@@ -2,9 +2,9 @@ import axios from "axios";
 
 const URL = "https://poo2024.unsada.edu.ar/cuentas/login";
 
-const urlAPI = "http://poo-dev.unsada.edu.ar:8084/api/events"
+const urlAPI = "https://poo-dev.unsada.edu.ar:8084/api/events"
 
-const urlNotificationsAPI = "http://poo-dev.unsada.edu.ar:8084/api/notifications/"
+const urlNotificationsAPI = "https://poo-dev.unsada.edu.ar:8084/api/notifications/"
                               // localhost:8080
 const createApi = axios.create({
   baseURL: urlAPI,

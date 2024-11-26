@@ -54,11 +54,44 @@
     background: rgb(0, 0, 0);
 }
 
-.fc-button-group {
 
+
+.fc-button-group {
     position: relative;
     gap: 10px;
 }
+
+
+@media (max-width: 1536px) { 
+
+
+.fc .fc-toolbar-title {
+    width: 130px;
+    height: 35px;
+    font-size: 15px;
+}
+
+
+.fc .fc-toolbar {
+    justify-content: space-between;
+    gap: 0px;
+    height: 50px;
+}
+
+.fc-toolbar-chunk {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+}
+
+
+
+
+
 
 
 

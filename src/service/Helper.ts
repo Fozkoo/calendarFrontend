@@ -50,7 +50,6 @@ const getAllEvents = async () => {
 const getAllEventsByIdUser = async (userId: any) => {
   try {
     const response = await createApi.get(`/getAllEventByIdUser/${userId}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     return error;

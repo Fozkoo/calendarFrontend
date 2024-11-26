@@ -116,17 +116,18 @@ function Home() {
       <Header name={userId} toggleMenu={toggleMenu} />
 
       <div
-        className={`container-page px-8 flex ${
+        className={`container-page px-8 flex max-2xl:px-3 ${
           menuVisible ? "justify-between" : "justify-center"
-        } items-start w-full h-[100vh]`}
+        } items-start w-full h-[100vh] max-2xl:justify-center`}
       >
         
         <div
           className={`container-main-menu ${
             menuVisible ? "flex" : "hidden"
-          } items-start justify-center pt-20 w-[23%] transition-all duration-300 ease-in-out`}
+          } items-start justify-center pt-20 w-[23%] transition-all duration-300 ease-in-out  max-2xl:absolute max-2xl:w-[100%] max-2xl:bg-[#E0E0E0] max-2xl:h-[100vh] max-2xl:z-20`}
         >
-          <div className="menu-container">
+          
+          <div className="menu-container max-2xl:flex max-2xl:flex-col">
             <button className="menu-button" onClick={handleNewEvent}>
               New Event
             </button>
@@ -134,18 +135,18 @@ function Home() {
               Delete Event
             </button>
             <button className="menu-button" onClick={handleModifyEvent}>
-              Change Event
+              Modify Event
             </button>
           </div>
         </div>
 
         
         <div
-          className={`container-calendar p-10 flex justify-center ${
+          className={`container-calendar p-10 flex justify-center  max-2xl:p-0 max-2xl:w-[100%] ${
             menuVisible ? "w-[75%]" : "w-[90%]"
           } transition-all duration-300 ease-in-out`}
         >
-          <div className="container-calendar pt-10 flex justify-center rounded-xl">
+          <div className="container-calendar pt-10 flex justify-center rounded-xl ">
             <FullCalendar
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"

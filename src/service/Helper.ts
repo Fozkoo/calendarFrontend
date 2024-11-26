@@ -2,10 +2,10 @@ import axios from "axios";
 
 const URL = "https://poo2024.unsada.edu.ar/cuentas/login";
 
-const urlAPI = "http://localhost:8080/api/events"
+const urlAPI = "http://poo-dev.unsada.edu.ar:8084/api/events"
 
-const urlNotificationsAPI = "http://localhost:8080/api/notifications/"
-
+const urlNotificationsAPI = "http://poo-dev.unsada.edu.ar:8084/api/notifications/"
+                              // localhost:8080
 const createApi = axios.create({
   baseURL: urlAPI,
 })
@@ -21,7 +21,7 @@ const login = async (username: string, password: string) => {
     try {
       const response = await axios.post(URL, { username, password });
       return response.data;
-    } catch (error) {
+    // } catch (error) {
       return error;
     }
 }
@@ -77,10 +77,6 @@ const modifyEvent = async (eventId: string, formData: any) => {
       throw error;
   }
 };
-
-
-
-
 
 
 

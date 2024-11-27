@@ -106,7 +106,7 @@ function AddEventComponent() {
 
           <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
             <p className="text-white text-2xl max-2xl:hidden">Name event</p>
-            <p className="text-white text-xl">Name</p>
+            <p className="text-white hidden text-xl max-2xl:flex">Name</p>
             <input
               type="text"
               placeholder="Name event"

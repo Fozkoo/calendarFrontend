@@ -20,20 +20,29 @@ function Login() {
     e.preventDefault();
     
     try {
-      const response = await servicesAPI.login(formData.username, formData.password);
-      
-      if (response.userId) {          
-        login(response.userId);       
-        navigate('/home');       
-      } else {
-        alert('Credenciales incorrectas, intenta nuevamente.');
-        navigate('/login');
-      }
+        const loginResponse = await servicesAPI.login(formData.username, formData.password);
+
+        if (loginResponse.userId) {
+            const { token, userId } = loginResponse;
+
+            const authorizeResponse = await servicesAPI.authorized(token, "4");
+
+            if (authorizeResponse.authorized) {
+                login(userId, token); 
+                navigate('/home');  
+            } else {
+                alert('No estás autorizado para acceder a este sistema.');
+                navigate('/login');
+            }
+        } else {
+            alert('Credenciales incorrectas, intenta nuevamente.');
+        }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      alert('Ocurrió un error al iniciar sesión. Inténtalo de nuevo.');
+        console.error('Error al iniciar sesión o verificar autorización:', error);
+        alert('Ocurrió un error. Inténtalo de nuevo.');
     }
-  };
+};
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

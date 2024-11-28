@@ -3,11 +3,11 @@ import imgLogo from "..//assets/Images/mujer.png";
 import LogoutComponent from "./LogoutComponent";
 
 interface HeaderProps {
-  name: string | null;
+  userName: String | null;
   toggleMenu: () => void;
 }
 
-export const Header = ({ name, toggleMenu }: HeaderProps) => {
+export const Header = ({ userName, toggleMenu }: HeaderProps) => {
   const [showLogoutMenu, setShowLogoutMenu] = useState(false);
 
   const handleProfileClick = () => {
@@ -26,8 +26,8 @@ export const Header = ({ name, toggleMenu }: HeaderProps) => {
         </nav>
 
         <aside className="user-info flex h-full gap-5 items-center ">
-          <h2 className="text-3xl hidden font-normal max-2xl:text-xl ">{name ? name : "User"}</h2>
-          <h2 className="text-3xl font-normal max-2xl:hidden">¡Welcome back {name ? name : "User"}!</h2>
+          <h2 className="text-3xl hidden font-normal max-2xl:text-xl ">{userName ? userName : "User"}</h2>
+          <h2 className="text-3xl font-normal max-2xl:hidden">¡Welcome back {userName ? userName : "User"}!</h2>
           <img
             src={imgLogo}
             alt="Profile Picture"

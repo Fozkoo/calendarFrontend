@@ -22,7 +22,8 @@ function Home() {
   const [addEventVisible, setAddEventVisible] = useState(false);
   const [deleteEventVisible, setDeleteEventVisible] = useState(false);
   const [modifyEventVisible, setModifyEventVisible] = useState(false);
-  const { userId } = useAuth();
+  const [userName, setUserName] = useState<String>("");
+  const { userId, token } = useAuth();
 
   useEffect(() => {
     if (!userId) return;
@@ -40,7 +41,20 @@ function Home() {
       }
     };
 
+    const fetchUserName = async () => {
+      try {
+        const tokenReal = token as string;
+        const userData = await servicesAPI.getDataUser(tokenReal, userId);
+        setUserName(userData.firstName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }
+
+
+
     fetchEvents();
+    fetchUserName();
   }, [userId]);
 
   const toggleMenu = () => {
@@ -115,7 +129,7 @@ function Home() {
         <ModifyEventMenu />
       </div>
 
-      <Header name={userId} toggleMenu={toggleMenu} />
+      <Header userName={userName} toggleMenu={toggleMenu} />
 
       <div
         className={`container-page px-8 flex max-2xl:px-3 ${

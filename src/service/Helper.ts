@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "https://poo2024.unsada.edu.ar/cuentas/login";
+const URL = "https://poo-dev.unsada.edu.ar:8088/cuentas/API/login";
 
 const urlAPI = "https://poo-dev.unsada.edu.ar:8084/api/events"
 
@@ -25,6 +25,30 @@ const login = async (username: string, password: string) => {
       return error;
     }
 }
+
+const authorized = async (token: string, systemId: string) => {
+  try {
+    const URL = "https://poo-dev.unsada.edu.ar:8088/cuentas/API/authorize";
+    const response = await axios.post(URL, { token, systemId });
+    return response.data;
+  } catch (err){
+    console.log(err);
+    throw err;
+  }
+};
+
+
+const getDataUser = async (token: string, userId: string) => {
+  try {
+    const URL = (`https://poo-dev.unsada.edu.ar:8088/cuentas/API/users/${userId}?token=${token}`);
+    const response = await axios.get(URL);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 
 
 // methods for events
@@ -102,7 +126,9 @@ const servicesAPI = {
     getAllNotifications,
     createNewEvent,
     deleteEvents,
-    modifyEvent
+    modifyEvent,
+    authorized,
+    getDataUser
 };
 
 

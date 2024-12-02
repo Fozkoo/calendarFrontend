@@ -119,6 +119,7 @@ const getAllNotifications = async () => {
 
 
 
+
 const servicesAPI = {
     login,
     getAllEvents,

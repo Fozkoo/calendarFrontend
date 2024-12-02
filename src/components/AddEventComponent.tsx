@@ -15,13 +15,14 @@ function AddEventComponent() {
   const [urlAttachment, setUrlAttachment] = useState<string>("");
   const [notificationId, setNotificationId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const { userId } = useAuth();
+  const { userId, token } = useAuth(); 
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
+        console.log("Fetching notifications...");
         const data: Notification[] = await methodsNotifications.getAllNotifications();
+        console.log("Notifications fetched:", data);
         setNotifications(data); 
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -32,29 +33,55 @@ function AddEventComponent() {
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
+    console.log("Submitting event form...");
     if (!eventTitle || !eventTime || !eventDate || !urlAttachment || !notificationId) {
       setErrorMessage("Todos los campos son obligatorios.");
+      console.error("Validation failed: All fields are required.");
       return;
     }
 
-    
     setErrorMessage("");
+
+   
+    try {
+      console.log("Verifying user authorization...");
+      const systemId = "4";
+      if (!token) {
+        throw new Error("No se encontró el token de sesión.");
+      }
+
+      const isAuthorized = await methodsNotifications.authorized(token as string, systemId);
+      console.log("Authorization status:", isAuthorized);
+      console.log("User ID:", userId);
+      console.log("Token:", token);
+      if (!isAuthorized) {
+        setErrorMessage("No estás autorizado para realizar esta acción.");
+        console.warn("User not authorized.");
+        return;
+      }
+    } catch (error) {
+      console.error("Error verifying authorization:", error);
+      setErrorMessage("Error verificando autorización. Por favor, inténtalo de nuevo.");
+      return;
+    }
 
     const newEvent = {
       eventTitle,
       eventTime,
       eventDate,
-      idUser: userId, 
+      idUser: userId,
       urlAttachment,
       notificationId,
     };
 
+    console.log("Event data to be created:", newEvent);
+
     try {
-      const response = await methodsNotifications.createNewEvent(newEvent); 
+      const response = await methodsNotifications.createNewEvent(newEvent);
       console.log("Event created successfully:", response);
-      alert("¡Event created successfully!");
+      alert("¡Evento creado exitosamente!");
       window.location.reload();
       setEventTitle("");
       setEventTime("");
@@ -62,13 +89,11 @@ function AddEventComponent() {
       setUrlAttachment("");
       setNotificationId(null);
     } catch (error) {
-      console.error("Error created event.", error);
-      alert("Error created event.");
+      console.error("Error creating event:", error);
+      alert("Error creando el evento.");
     }
   };
 
-
-  
   return (
     <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
       <div className="container-form flex justify-center items-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg ">

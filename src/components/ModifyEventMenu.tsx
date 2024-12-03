@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import servicesAPI from "../service/Helper";
+import methodsNotifications from "../service/Helper";
+import Swal from "sweetalert2";
 
 interface Notification {
     id: number;
@@ -8,7 +10,7 @@ interface Notification {
 }
 
 const ModifyEventMenu = () => {
-    const { userId } = useAuth();
+    const { userId, token, logout } = useAuth();
     const [data, setData] = useState<any[]>([]);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [notificationId, setNotificationId] = useState<number | string>("");
@@ -19,6 +21,10 @@ const ModifyEventMenu = () => {
     const [eventDescription, setEventDescription] = useState<string>("");
 
     const [selectedEventId, setSelectedEventId] = useState<string | number>("");
+    const [errorMessage, setErrorMessage] = useState<string>("");
+
+
+
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -30,7 +36,6 @@ const ModifyEventMenu = () => {
                 console.error("Error fetching events:", error);
             }
         };
-
         fetchEvents();
     }, [userId]);
 
@@ -48,23 +53,85 @@ const ModifyEventMenu = () => {
     }, []);
 
 
+
+    useEffect(() => {
+        if (selectedEventId) {
+            const selectedEvent = data.find((event) => event.eventId === Number(selectedEventId));
+
+            console.log("Evento seleccionado:", selectedEvent);
+            if (selectedEvent) {
+                setEventTitle(selectedEvent.eventTitle || "");
+                setEventTime(selectedEvent.eventTime || "");
+                setEventDate(selectedEvent.eventDay || "");
+                setEventDescription(selectedEvent.attachments[0]?.url || "");
+
+                if (selectedEvent.notifications && selectedEvent.notifications.length > 0) {
+                    setNotificationId(selectedEvent.notifications[0]?.id || "");
+                }
+            }
+        }
+    }, [selectedEventId, data]);
+
     const handleModifyEvent = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-      
+        try {
+            console.log("Verifying user authorization...");
+            const systemId = "4";
+            if (!token) {
+                throw new Error("No se encontró el token de sesión.");
+            }
+
+            const isAuthorized = await methodsNotifications.authorized(token as string, systemId);
+
+            console.log("User ID:", userId);
+            console.log("Token:", token);
+            console.log("isAuthorized:", isAuthorized);
+
+            if (isAuthorized.authorized == false) {
+                setErrorMessage("No estás autorizado para realizar esta acción.");
+                console.warn("User not authorized.");
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'User not authorized.',
+                    icon: 'error',
+                    confirmButtonText: 'Logout'
+                }).then(() => {
+                    logout();
+                });
+                return;
+            } else if (isAuthorized == true){
+                console.log("User is authorized");
+            }
+        } catch (error) {
+            console.error("Error verifying authorization");
+            Swal.fire({
+              title: 'Error!',
+              text: 'User not authorized.',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            }).then(() => {
+                window.location.reload();
+            });
+            setErrorMessage("Error verificando autorización. Por favor, inténtalo de nuevo.");
+            return;
+          }
+
         if (!selectedEventId) {
-            console.error("No event selected");
             alert("Please select an event!");
             return;
         }
+        if (!eventTitle || !eventTime || !eventDate) {
+            alert("Please fill in all required fields (Event Title, Time, and Date).");
+            return;
+        }
 
-      
         const formData = {
             title: eventTitle,
             hora: eventTime,
             day: eventDate,
+            newUrl: eventDescription,
             notificationId: notificationId,
-            newUrl: eventDescription, 
         };
 
         const filteredFormData = Object.fromEntries(
@@ -73,18 +140,19 @@ const ModifyEventMenu = () => {
 
         try {
             const response = await servicesAPI.modifyEvent(String(selectedEventId), filteredFormData);
-            console.log("Evento modificado:", response);
-            window.location.reload();
+
+
         } catch (error) {
-            console.error("Error modificando evento:", error);
+
         }
     };
+
+
 
 
     return (
         <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
             <div className="container-form flex justify-center items-center bg-white rounded-xl w-[600px] h-[650px] shadow-lg max-2xl:w-[95%]">
-
                 <div className="container-content flex bg-[#EDEDED] w-full rounded-2xl m-10 p-5 flex-col justify-center items-center gap-3 max-2xl:m-3">
                     <div className="input w-[80%] h-14 flex items-center justify-center rounded-lg px-7 max-2xl:w-[90%]">
                         <p className="text-white text-2xl">Modify Event</p>
@@ -97,7 +165,7 @@ const ModifyEventMenu = () => {
                             id="events"
                             className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-28"
                             value={selectedEventId}
-                            onChange={(e) => setSelectedEventId(e.target.value)} 
+                            onChange={(e) => setSelectedEventId(e.target.value)}
                         >
                             <option value="">Select an event</option>
                             {data.map((event) => (
@@ -109,7 +177,7 @@ const ModifyEventMenu = () => {
                     </div>
 
                     <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:px-4 max-2xl:w-[90%]">
-                        <p className="text-white text-2xl max-2xl:text-lg">Hora</p>
+                        <p className="text-white text-2xl max-2xl:text-lg">Hour</p>
                         <input
                             type="time"
                             className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-28"
@@ -149,7 +217,7 @@ const ModifyEventMenu = () => {
                     </div>
 
                     <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:px-4 max-2xl:w-[90%]">
-                        <p className="text-white text-2xl max-2xl:text-lg ">Notification</p>
+                        <p className="text-white text-2xl max-2xl:text-lg">Notification</p>
                         <select
                             value={notificationId || ""}
                             onChange={(e) => setNotificationId(Number(e.target.value))}
@@ -168,11 +236,13 @@ const ModifyEventMenu = () => {
 
                     <button
                         type="button"
-                        className="input text-2xl mt-[5%] w-[80%] h-10 text-white rounded-2xl "
+                        className="w-1/2 h-10 text-white bg-blue-600 rounded-lg"
                         onClick={handleModifyEvent}
                     >
-                        Modify
+                        Modify Event
                     </button>
+
+
                 </div>
             </div>
         </div>

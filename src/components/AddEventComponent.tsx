@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import methodsNotifications from "../service/Helper"; 
 import { useAuth } from "../context/AuthContext";
+import Swal from 'sweetalert2';
+import servicesAPI from "../service/Helper";
+import axios from "axios";
 
 interface Notification {
   id: number;
@@ -15,14 +18,14 @@ function AddEventComponent() {
   const [urlAttachment, setUrlAttachment] = useState<string>("");
   const [notificationId, setNotificationId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { userId, token } = useAuth(); 
+  const { userId, token, logout } = useAuth(); 
+
+
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        console.log("Fetching notifications...");
         const data: Notification[] = await methodsNotifications.getAllNotifications();
-        console.log("Notifications fetched:", data);
         setNotifications(data); 
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -31,6 +34,8 @@ function AddEventComponent() {
 
     fetchNotifications();
   }, []);
+
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,17 +57,38 @@ function AddEventComponent() {
         throw new Error("No se encontró el token de sesión.");
       }
 
-      const isAuthorized = await methodsNotifications.authorized(token as string, systemId);
-      console.log("Authorization status:", isAuthorized);
+      const isAuthorized = await methodsNotifications.authorized(token as string, systemId as string);
+     
       console.log("User ID:", userId);
       console.log("Token:", token);
-      if (!isAuthorized) {
+      console.log("System ID:", systemId);
+      console.log("Is authorized:", isAuthorized);
+
+      if (isAuthorized.authorized == false) {
         setErrorMessage("No estás autorizado para realizar esta acción.");
         console.warn("User not authorized.");
+        Swal.fire({
+          title: 'Error!',
+          text: 'User not authorized.',
+          icon: 'error',
+          confirmButtonText: 'Logout'
+        }).then(() => {
+          logout();
+        });
         return;
+      } else if (isAuthorized.authorized == true) {
+        console.log("User authorized.");
       }
     } catch (error) {
-      console.error("Error verifying authorization:", error);
+      console.error("Error verifying authorization");
+      Swal.fire({
+        title: 'Error!',
+        text: 'User not authorized.',
+        icon: 'error',
+        confirmButtonText: 'Logout'
+      }).then(() => {
+        logout();
+      });
       setErrorMessage("Error verificando autorización. Por favor, inténtalo de nuevo.");
       return;
     }
@@ -79,20 +105,17 @@ function AddEventComponent() {
     console.log("Event data to be created:", newEvent);
 
     try {
-      const response = await methodsNotifications.createNewEvent(newEvent);
-      console.log("Event created successfully:", response);
-      alert("¡Evento creado exitosamente!");
-      window.location.reload();
-      setEventTitle("");
-      setEventTime("");
-      setEventDate("");
-      setUrlAttachment("");
-      setNotificationId(null);
-    } catch (error) {
+      const response = await servicesAPI.createNewEvent(newEvent);
+
+        
+
+    } catch (error: any) {
       console.error("Error creating event:", error);
-      alert("Error creando el evento.");
+      }
     }
-  };
+    
+
+
 
   return (
     <div className="container-addEventComponent flex justify-center items-center w-full h-[100vh]">
@@ -108,7 +131,7 @@ function AddEventComponent() {
             <p className="text-red-500 text-sm">{errorMessage}</p>
           )}
           <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
-            <p className="text-white text-2xl max-2xl:text-xl">Hora</p>
+            <p className="text-white text-2xl max-2xl:text-xl">Hour</p>
             <input
               type="time"
               value={eventTime}
@@ -142,7 +165,7 @@ function AddEventComponent() {
             />
           </div>
           <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%]  max-2xl:px-4">
-            <p className="text-white text-2xl max-2xl:text-base">Desciption</p>
+            <p className="text-white text-2xl max-2xl:text-base">Description</p>
             <input
               type="text"
               placeholder="Attachment"

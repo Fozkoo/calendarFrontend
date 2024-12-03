@@ -15,6 +15,7 @@ import "../styles/MainMenu.css";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import Swal from "sweetalert2";
 
 function Home() {
   const [data, setData] = useState([]);
@@ -23,7 +24,46 @@ function Home() {
   const [deleteEventVisible, setDeleteEventVisible] = useState(false);
   const [modifyEventVisible, setModifyEventVisible] = useState(false);
   const [userName, setUserName] = useState<String>("");
-  const { userId, token } = useAuth();
+  const { userId, token, logout } = useAuth();
+
+
+  
+  const userValidate = async () => {
+    try {
+      const tokenReal = token as string;
+      let authorizeResponse = await servicesAPI.authorized(tokenReal, "4");
+      console.log("authorizeResponse: ", authorizeResponse.authorized);
+      if (authorizeResponse.authorized === false) {
+        Swal.fire({
+          title: 'Warning!',
+          text: 'The session has expired, please log in again.',
+          icon: 'warning',
+          confirmButtonText: 'Logout'
+        }).then(() => {
+          logout();
+        });
+      }
+    } catch (error) {
+      logout();
+    }
+  }
+
+  useEffect(() => {
+    if (!userId) return;
+  
+    // Ejecutar `userValidate` inmediatamente al montar
+    userValidate();
+  
+    // Crear un intervalo que ejecute `userValidate` cada minuto
+    const intervalId = setInterval(() => {
+      userValidate();
+    }, 30000); // 60000 ms = 1 minuto
+  
+    // Limpia el intervalo al desmontar el componente
+    return () => clearInterval(intervalId);
+  }, [userId]); // Se ejecuta solo cuando `userId` cambia
+  
+
 
   useEffect(() => {
     if (!userId) return;

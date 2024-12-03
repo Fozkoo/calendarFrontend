@@ -2,14 +2,16 @@
 import { useState } from 'react';
 import { BiHide, BiShow } from 'react-icons/bi';
 import servicesAPI from '../service/Helper';
-import { useAuth } from '../context/AuthContext'; 
-import { useNavigate } from 'react-router-dom';    
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const { login } = useAuth();    
-  const navigate = useNavigate();  
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,30 +20,39 @@ function Login() {
 
   const sendForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     try {
-        const loginResponse = await servicesAPI.login(formData.username, formData.password);
+      const loginResponse = await servicesAPI.login(formData.username, formData.password);
 
-        if (loginResponse.userId) {
-            const { token, userId } = loginResponse;
+      if (loginResponse.userId) {
+        const { token, userId } = loginResponse;
 
-            const authorizeResponse = await servicesAPI.authorized(token, "4");
+        const authorizeResponse = await servicesAPI.authorized(token, "4");
 
-            if (authorizeResponse.authorized) {
-                login(userId, token); 
-                navigate('/home');  
-            } else {
-                alert('No estás autorizado para acceder a este sistema.');
-                navigate('/login');
-            }
+        if (authorizeResponse.authorized) {
+          login(userId, token);
+          navigate('/home');
         } else {
-            alert('Credenciales incorrectas, intenta nuevamente.');
+          Swal.fire({
+            title: 'Error!',
+            text: 'You are not authorized to access this page',
+            icon: 'error',
+            confirmButtonText: 'Okey'
+          }) 
+          navigate('/login');
         }
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: ' Wrong password or user not found',
+          icon: 'error',
+          confirmButtonText: 'Okey'
+        })
+      }
     } catch (error) {
-        console.error('Error al iniciar sesión o verificar autorización:', error);
-        alert('Ocurrió un error. Inténtalo de nuevo.');
+      console.error('Error al iniciar sesión o verificar autorización:', error);
     }
-};
+  };
 
 
   const togglePasswordVisibility = () => {

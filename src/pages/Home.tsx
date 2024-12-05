@@ -76,6 +76,7 @@ function Home() {
           date: event.eventDay,
         }));
         setData(formattedEvents);
+        console.log("Events fetched:", events);
       } catch (error) {
         console.error("Error fetching events:", error);
       }

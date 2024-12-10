@@ -16,6 +16,9 @@ import "../styles/MainMenu.css";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import Swal from "sweetalert2";
+import moment from "moment-timezone";
+import fs from "fs";
+
 
 function Home() {
   const [data, setData] = useState([]);
@@ -25,7 +28,8 @@ function Home() {
   const [modifyEventVisible, setModifyEventVisible] = useState(false);
   const [userName, setUserName] = useState<String>("");
   const { userId, token, logout } = useAuth();
-
+  
+  const [notifiedEvents, setNotifiedEvents] = useState<Set<string>>(new Set());
 
   
   const userValidate = async () => {
@@ -62,12 +66,12 @@ function Home() {
     // Limpia el intervalo al desmontar el componente
     return () => clearInterval(intervalId);
   }, [userId]); // Se ejecuta solo cuando `userId` cambia
-  
+
 
 
   useEffect(() => {
     if (!userId) return;
-
+  
     const fetchEvents = async () => {
       try {
         const events = await servicesAPI.getAllEventsByIdUser(userId);
@@ -76,12 +80,13 @@ function Home() {
           date: event.eventDay,
         }));
         setData(formattedEvents);
+        scheduleNotifications(events); // Llamar a `scheduleNotifications` aquí
         console.log("Events fetched:", events);
       } catch (error) {
         console.error("Error fetching events:", error);
       }
     };
-
+  
     const fetchUserName = async () => {
       try {
         const tokenReal = token as string;
@@ -91,12 +96,12 @@ function Home() {
         console.error("Error fetching user data:", error);
       }
     }
-
-
-
+  
     fetchEvents();
     fetchUserName();
   }, [userId]);
+  
+  
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -128,6 +133,84 @@ function Home() {
 
 
   const isAnyModalVisible = addEventVisible || deleteEventVisible || modifyEventVisible;
+
+
+  interface Event {
+    eventId: number;
+    eventTitle: string;
+    eventTime: string;
+    eventDay: string;
+    eventUser: string;
+    attachments: { id: number; url: string }[];
+    notifications: { id: number; type: string }[];
+  }
+
+
+  const scheduleNotifications = (events: Event[]) => {
+    events.forEach((event) => {
+      event.notifications.forEach((notification) => {
+        const notificationTime = calculateNotificationTime(event.eventDay, event.eventTime, notification.type);
+        if (!notificationTime) return;
+
+        const delay = notificationTime.getTime() - new Date().getTime();
+        if (delay > 0) {
+          console.log(moment.tz(notificationTime, "America/Argentina/Buenos_Aires").format("YYYY-MM-DDTHH:mm"))
+          console.log("delayyyy :" + delay)
+          setTimeout(() => sendNotification(event, notification.type), delay);
+        }
+      });
+    });
+  };
+
+  const calculateNotificationTime = (eventDay: string, eventTime: string, type: string): Date | null => {
+  const eventDate = moment.tz(`${eventDay}T${eventTime}`, "YYYY-MM-DDTHH:mm", "America/Argentina/Buenos_Aires").toDate();
+
+  switch (type) {
+    case "1 hora antes":
+      return new Date(eventDate.getTime() - 60 * 60 * 1000);
+    case "40 minutos antes":
+      return new Date(eventDate.getTime() - 40 * 60 * 1000);
+    case "5 minutos antes":
+      return new Date(eventDate.getTime() - 1 * 60 * 1000); // Asegurando que sea 5 minutos
+    case "1 minuto antes":
+      return new Date(eventDate.getTime() - 1 * 60 * 1000);
+    default:
+      return null;
+  }
+};
+
+  const sendNotification = async (event: Event, type: string) => {
+    if (notifiedEvents.has(event.eventId + type)) {
+      console.log(`Notificación ya enviada para el evento ${event.eventId} (${type}).`);
+      return; // Evita enviar notificación si ya fue notificada
+    }
+  
+    const payload = {
+      token: "X",
+      systemId: "4",
+      from: "grupo4@gugle.com",
+      to: ["grupo4@gugle.com"],
+      subject: `Notificación: ${event.eventTitle}`,
+      body: `Este es un recordatorio para el evento: ${event.eventTitle}, programado para ${event.eventDay} a las ${event.eventTime}. Tipo de notificación: ${type}.`,
+      attachments: event.attachments.map((attachment) => ({
+        filename: `attachment-${attachment.id}`,
+        url: attachment.url,
+      })),
+    };
+  
+    try {
+      await servicesAPI.sendNotifications(payload);
+      setNotifiedEvents((prevState) => new Set(prevState.add(event.eventId + type))); // Marcar como notificado
+      const successMessage = `Notificación enviada para el evento ${event.eventId} (${type}).`;
+      console.log(successMessage);
+    } catch (error) {
+      const errorMessage = `Error enviando notificación para el evento ${event.eventId} (${type}): ${error}`;
+      console.error(errorMessage);
+    }
+  };
+  
+  
+
 
   return (
     <>

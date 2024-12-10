@@ -9,6 +9,8 @@ const urlNotificationsAPI = "https://poo-dev.unsada.edu.ar:8084/api/notification
 // localhost:8080
 
 
+const sendNotificationsAPI = "https://poo-dev.unsada.edu.ar:8083/yimeil/emails"
+
 
 const createApi = axios.create({
   baseURL: urlAPI,
@@ -16,6 +18,10 @@ const createApi = axios.create({
 
 const createNotificationsApi = axios.create({
   baseURL: urlNotificationsAPI,
+})
+
+const createSendNotificationsAPI = axios.create({
+  baseURL: sendNotificationsAPI,
 })
 
 
@@ -175,6 +181,17 @@ const getAllNotifications = async () => {
 }
 
 
+const sendNotifications = async (payload: object) => {
+  try {
+    const response = await createSendNotificationsAPI.post("", payload);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+
 
 
 
@@ -189,7 +206,8 @@ const servicesAPI = {
   deleteEvents,
   modifyEvent,
   authorized,
-  getDataUser
+  getDataUser,
+  sendNotifications
 };
 
 

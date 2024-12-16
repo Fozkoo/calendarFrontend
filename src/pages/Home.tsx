@@ -80,7 +80,7 @@ function Home() {
           date: event.eventDay,
         }));
         setData(formattedEvents);
-        scheduleNotifications(events); // Llamar a `scheduleNotifications` aquí
+        scheduleNotifications(events); 
         console.log("Events fetched:", events);
       } catch (error) {
         console.error("Error fetching events:", error);

@@ -3,12 +3,16 @@ import Swal from 'sweetalert2';
 
 const URL = "https://poo-dev.unsada.edu.ar:8088/cuentas/API/login";
 
-const urlAPI = "https://poo-dev.unsada.edu.ar:8084/api/events"
+const urlAPI = "http://localhost:8080/api/events"
 
-const urlNotificationsAPI = "https://poo-dev.unsada.edu.ar:8084/api/notifications/"
+//https://poo-dev.unsada.edu.ar:8084/api/events
+      
+const urlNotificationsAPI = "http://localhost:8080/api/notifications/"
 // localhost:8080
 
+//https://poo-dev.unsada.edu.ar:8084/api/notifications/
 
+  
 const sendNotificationsAPI = "https://poo-dev.unsada.edu.ar:8083/yimeil/emails"
 
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import methodsNotifications from "../service/Helper"; 
+import methodsNotifications from "../service/Helper";
 import { useAuth } from "../context/AuthContext";
 import Swal from 'sweetalert2';
 import servicesAPI from "../service/Helper";
@@ -15,18 +15,18 @@ function AddEventComponent() {
   const [eventTitle, setEventTitle] = useState<string>("");
   const [eventTime, setEventTime] = useState<string>("");
   const [eventDate, setEventDate] = useState<string>("");
-  const [urlAttachment, setUrlAttachment] = useState<string>("");
+  const [urlAttachment, setUrlAttachment] = useState<File | null>(null);
   const [notificationId, setNotificationId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const { userId, token, logout } = useAuth(); 
-
+  const { userId, token, logout } = useAuth();
+  const [fileName, setFileName] = useState("");
 
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const data: Notification[] = await methodsNotifications.getAllNotifications();
-        setNotifications(data); 
+        setNotifications(data);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -35,85 +35,93 @@ function AddEventComponent() {
     fetchNotifications();
   }, []);
 
-  
 
-  const handleSubmit = async (e: React.FormEvent) => {
+
+  async function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve((reader.result as string).split(',')[1]);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setErrorMessage(""); 
 
-    console.log("Submitting event form...");
     if (!eventTitle || !eventTime || !eventDate || !urlAttachment || !notificationId) {
       setErrorMessage("Todos los campos son obligatorios.");
-      console.error("Validation failed: All fields are required.");
       return;
     }
 
-    setErrorMessage("");
-
-   
     try {
-      console.log("Verifying user authorization...");
-      const systemId = "4";
-      if (!token) {
-        throw new Error("No se encontró el token de sesión.");
-      }
 
-      const isAuthorized = await methodsNotifications.authorized(token as string, systemId as string);
-     
-      console.log("User ID:", userId);
-      console.log("Token:", token);
-      console.log("System ID:", systemId);
-      console.log("Is authorized:", isAuthorized);
+      const fileURL = await uploadFileToExternalSystem(urlAttachment);
 
-      if (isAuthorized.authorized == false) {
-        setErrorMessage("No estás autorizado para realizar esta acción.");
-        console.warn("User not authorized.");
-        Swal.fire({
-          title: 'Error!',
-          text: 'User not authorized.',
-          icon: 'error',
-          confirmButtonText: 'Logout'
-        }).then(() => {
-          logout();
-        });
-        return;
-      } else if (isAuthorized.authorized == true) {
-        console.log("User authorized.");
-      }
-    } catch (error) {
-      console.error("Error verifying authorization");
-      Swal.fire({
-        title: 'Error!',
-        text: 'User not authorized.',
-        icon: 'error',
-        confirmButtonText: 'Logout'
-      }).then(() => {
-        logout();
-      });
-      setErrorMessage("Error verificando autorización. Por favor, inténtalo de nuevo.");
-      return;
-    }
 
-    const newEvent = {
-      eventTitle,
-      eventTime,
-      eventDate,
-      idUser: userId,
-      urlAttachment,
-      notificationId,
-    };
+      const newEvent = {
+        eventTitle,
+        eventTime,
+        eventDate,
+        idUser: userId,
+        urlAttachment: fileURL, 
+        notificationId
+      };
 
-    console.log("Event data to be created:", newEvent);
-
-    try {
       const response = await servicesAPI.createNewEvent(newEvent);
-
-        
-
+      console.log("Event created successfully:", response);
     } catch (error: any) {
       console.error("Error creating event:", error);
-      }
+      setErrorMessage("Error al crear el evento. Inténtalo nuevamente.");
     }
-    
+  }
+
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setFileName(file.name); 
+      setUrlAttachment(file);
+    }
+  };
+
+
+
+  async function uploadFileToExternalSystem(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const body = {
+      token: token,
+      userId: userId,
+      systemId: 4,
+      isFolder: false,
+      filePath: "/documents/",
+      fileExt: file.name.split('.').pop(), // Extensión del archivo
+      fileName: file.name, // Nombre original del archivo
+      mimeType: file.type, // Tipo MIME del archivo
+      content: await file.text(), // Lee el contenido del archivo
+      isPublic: true,
+      folderId: ""
+    };
+
+    try {
+      const response = await axios.post("https://poo-dev.unsada.edu.ar:8082/draiv/files", body, {
+        headers: { "Content-Type": "application/json" }
+      });
+
+      console.log("File uploaded to external system:", response.data);
+      return response.data.fileURL;
+    } catch (error) {
+      console.error("Error uploading file to external system:", error);
+      throw error;
+    }
+  }
+
+
 
 
 
@@ -164,17 +172,25 @@ function AddEventComponent() {
               required
             />
           </div>
-          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%]  max-2xl:px-4">
-            <p className="text-white text-2xl max-2xl:text-base">Description</p>
+
+          <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
+            <p className="text-white text-2xl max-2xl:text-base">Attachment</p>
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer text-white text-xl bg-black hover:bg-gray-800 rounded-md px-4 py-2"
+            >
+              {fileName ? "File Uploaded" : "Choose File"}
+            </label>
             <input
-              type="text"
-              placeholder="Attachment"
-              value={urlAttachment}
-              onChange={(e) => setUrlAttachment(e.target.value)}
-              className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-32"
+              id="file-upload"
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
               required
             />
           </div>
+
+
           <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:w-[75%] max-2xl:px-4">
             <p className="text-white text-2xl max-2xl:text-xl">Notification</p>
             <select

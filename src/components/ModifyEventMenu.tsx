@@ -207,7 +207,7 @@ const ModifyEventMenu = () => {
                     </div>
 
                     <div className="input w-[80%] h-14 flex items-center justify-between rounded-lg px-7 bg-gray-800 max-2xl:px-4 max-2xl:w-[90%]">
-                        <p className="text-white text-2xl max-2xl:text-lg">Description</p>
+                        <p className="text-white text-2xl max-2xl:text-lg">Attachment</p>
                         <input
                             type="text"
                             className="w-40 h-10 border-none rounded-md px-2 max-2xl:w-28"
@@ -236,7 +236,7 @@ const ModifyEventMenu = () => {
 
                     <button
                         type="button"
-                        className="w-1/2 h-10 text-white bg-blue-600 rounded-lg"
+                        className="w-1/2 h-10 text-white bg-black text-xl rounded-lg"
                         onClick={handleModifyEvent}
                     >
                         Modify Event

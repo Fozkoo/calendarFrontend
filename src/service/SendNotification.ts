@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import servicesAPI from "./Helper";
 import { useAuth } from "../context/AuthContext";
-import fs from "fs"; // Si planeas registrar en un archivo
+import fs from "fs";
 
 interface Event {
   eventId: number;

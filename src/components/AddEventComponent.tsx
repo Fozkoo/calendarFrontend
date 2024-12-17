@@ -3,7 +3,9 @@ import methodsNotifications from "../service/Helper";
 import { useAuth } from "../context/AuthContext";
 import Swal from 'sweetalert2';
 import servicesAPI from "../service/Helper";
-import axios from "axios";
+
+import SendAttachmentHelper from "../service/SendAttachmentHelper";
+
 
 interface Notification {
   id: number;
@@ -37,17 +39,6 @@ function AddEventComponent() {
 
 
 
-  async function fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve((reader.result as string).split(',')[1]);
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
-  }
-
-
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMessage(""); 
@@ -59,7 +50,7 @@ function AddEventComponent() {
 
     try {
 
-      const fileURL = await uploadFileToExternalSystem(urlAttachment);
+      const fileURL = await SendAttachmentHelper.uploadFileToExternalSystem(urlAttachment as File, userId as string, token as string);
 
 
       const newEvent = {
@@ -72,7 +63,6 @@ function AddEventComponent() {
       };
 
       const response = await servicesAPI.createNewEvent(newEvent);
-      console.log("Event created successfully:", response);
     } catch (error: any) {
       console.error("Error creating event:", error);
       setErrorMessage("Error al crear el evento. Inténtalo nuevamente.");
@@ -87,40 +77,6 @@ function AddEventComponent() {
       setUrlAttachment(file);
     }
   };
-
-
-
-  async function uploadFileToExternalSystem(file: File): Promise<string> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const body = {
-      token: token,
-      userId: userId,
-      systemId: 4,
-      isFolder: false,
-      filePath: "/documents/",
-      fileExt: file.name.split('.').pop(), // Extensión del archivo
-      fileName: file.name, // Nombre original del archivo
-      mimeType: file.type, // Tipo MIME del archivo
-      content: await file.text(), // Lee el contenido del archivo
-      isPublic: true,
-      folderId: ""
-    };
-
-    try {
-      const response = await axios.post("https://poo-dev.unsada.edu.ar:8082/draiv/files", body, {
-        headers: { "Content-Type": "application/json" }
-      });
-
-      console.log("File uploaded to external system:", response.data);
-      return response.data.fileURL;
-    } catch (error) {
-      console.error("Error uploading file to external system:", error);
-      throw error;
-    }
-  }
-
 
 
 

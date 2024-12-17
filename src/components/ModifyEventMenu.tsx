@@ -24,33 +24,29 @@ const ModifyEventMenu = () => {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
 
-
+    //con este me traigo los eventos del usuario y las notificaciones 
 
     useEffect(() => {
-        const fetchEvents = async () => {
+        const fetchData = async () => {
             try {
-                const events = await servicesAPI.getAllEventsByIdUser(userId);
-                const sortedEvents = events.sort((a: any, b: any) => b.eventId - a.eventId);
-                setData(sortedEvents);
+                // Fetch events for the user
+                if (userId) {
+                    const events = await servicesAPI.getAllEventsByIdUser(userId);
+                    const sortedEvents = events.sort((a: any, b: any) => b.eventId - a.eventId);
+                    setData(sortedEvents);
+                }
+    
+                // Fetch notifications
+                const notifications = await servicesAPI.getAllNotifications();
+                setNotifications(notifications);
             } catch (error) {
-                console.error("Error fetching events:", error);
+                console.error("Error fetching data:", error);
             }
         };
-        fetchEvents();
+    
+        fetchData();
     }, [userId]);
-
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const data: Notification[] = await servicesAPI.getAllNotifications();
-                setNotifications(data);
-            } catch (error) {
-                console.error("Error fetching notifications:", error);
-            }
-        };
-
-        fetchNotifications();
-    }, []);
+    
 
 
 
@@ -71,6 +67,8 @@ const ModifyEventMenu = () => {
             }
         }
     }, [selectedEventId, data]);
+
+
 
     const handleModifyEvent = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
